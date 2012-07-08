@@ -26,6 +26,7 @@ void parsercore::startParser(){
 void parsercore::stopParser(){
     timer->stop();
     qDebug() << trUtf8("Timer stop");
+
 }
 
 void parsercore::timerEvent(QTimerEvent *event){
@@ -38,6 +39,7 @@ void parsercore::timerEvent(QTimerEvent *event){
         QObject::timerEvent(event);
         qDebug() << "event";
     }
+
 }
 
 void parsercore::getsettings(){

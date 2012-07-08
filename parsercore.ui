@@ -26,7 +26,7 @@
     <string>Start</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit">
+  <widget class="QTextEdit" name="parserTextEdit">
    <property name="geometry">
     <rect>
      <x>160</x>

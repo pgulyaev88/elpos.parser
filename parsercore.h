@@ -31,6 +31,7 @@ private slots:
     void startParser();
     void stopParser();
 
+
 protected:
     void timerEvent(QTimerEvent *event);
 
