@@ -39,6 +39,8 @@ private:
     Ui::parsercore *ui;
     QTimer *timer;
     int step;
+    QString line;
+    QStringList list;
 
 };
 

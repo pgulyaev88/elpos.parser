@@ -1,3 +1,12 @@
+#include <QtGui>
+#include <QTimerEvent>
+#include <QObject>
+#include <QTimer>
+#include <QSettings>
+#include <QFile>
+#include <QEvent>
+#include <QDebug>
+#include <QRegExp>
 #include "parsercore.h"
 #include "ui_parsercore.h"
 
@@ -39,7 +48,6 @@ void parsercore::timerEvent(QTimerEvent *event){
         QObject::timerEvent(event);
         qDebug() << "event";
     }
-
 }
 
 void parsercore::getsettings(){
@@ -60,28 +68,39 @@ void parsercore::getsettings(){
 
 }
 
-static void process_line(const QString &)
-{
-}
+//static void process_line(const QString &)
+//{
+//}
 
 void parsercore::parsefile(){
-    //    getsettings();
+        getsettings();
 
-        qDebug() << "Start Parsing";
-        QFile file("com1.txt");
+//        qDebug() << "Start Parsing";
+        QFile file("./com1");
         if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug() << file.errorString();
 
         QTextStream in(&file);
         QString line = in.readLine();
-        int x = 0;
+//        int x = 0;
+        QRegExp rx("(code):(\\d{4}):(\\d{3}|\\d{2}|\\d{1})");
         while(!line.isNull()) {
-            process_line(line);
             line = in.readLine();
-            x++;
+            int pos = rx.indexIn(line);
+            QStringList list;
+            list = rx.capturedTexts();
+            QString cap1 = rx.cap(1);
+            int cap2 = rx.cap(2).toInt();
+            int cap3 = rx.cap(3).toInt();
+//            list
+//            x++;
 //            qDebug() << line;
+//            qDebug() << list;
+            qDebug() << cap1;
+            qDebug() << cap2;
+            qDebug() << cap3;
         }
-        qDebug() << x;
+//        qDebug() << x;
     //    clearenv();
 }
 
