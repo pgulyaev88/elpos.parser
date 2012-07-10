@@ -1,10 +1,13 @@
 #include <QtGui>
+#include <QtSql>
 #include <QTimerEvent>
 #include <QObject>
 #include <QTimer>
 #include <QSettings>
 #include <QFile>
 #include <QEvent>
+#include <QSqlDatabase>
+#include <QSqlQueryModel>
 #include <QDebug>
 #include <QRegExp>
 #include "parsercore.h"
@@ -24,6 +27,8 @@ parsercore::parsercore(QWidget *parent) :
     timer->start();
     int step = 0;
 //    parsefile();
+    getsettings();
+    dbcon();
 }
 
 
@@ -57,8 +62,8 @@ void parsercore::getsettings(){
 
     settings->setValue("restaurant/id",1);
 
-    int restId = settings->value("restaurant/id").toInt();
-    qDebug() << "Restaurant ID:" << restId;
+    int idRest = settings->value("restaurant/id").toInt();
+    qDebug() << "Restaurant ID:" << idRest;
 
     QString filePath = settings->value("restaurant/filepath").toString();
     qDebug() << "Restaurant File Path:" << filePath;
@@ -68,21 +73,16 @@ void parsercore::getsettings(){
 
 }
 
-//static void process_line(const QString &)
-//{
-//}
-
 void parsercore::parsefile(){
-        getsettings();
+//        getsettings();
 
 //        qDebug() << "Start Parsing";
-        QFile file("./com1");
-        if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        QFile file("./com");
+        if(!file.open(QIODevice::ReadOnly))
             qDebug() << file.errorString();
 
         QTextStream in(&file);
         QString line = in.readLine();
-//        int x = 0;
         QRegExp rx("(code):(\\d{4}):(\\d{3}|\\d{2}|\\d{1})");
         while(!line.isNull()) {
             line = in.readLine();
@@ -93,17 +93,31 @@ void parsercore::parsefile(){
             int cap2 = rx.cap(2).toInt();
             int cap3 = rx.cap(3).toInt();
 //            list
-//            x++;
 //            qDebug() << line;
 //            qDebug() << list;
             qDebug() << cap1;
             qDebug() << cap2;
             qDebug() << cap3;
         }
-//        qDebug() << x;
     //    clearenv();
+
 }
 
+
+void parsercore::dbcon(){
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    db.setHostName("127.0.0.1");
+    db.setDatabaseName("parser");
+    db.setUserName("parser");
+    db.setPassword("parser");
+    if (!db.open()){
+        qDebug() << QObject::trUtf8("Database error connect") << db.lastError().text();
+    }
+}
+
+double parsercore::insertIn(int idRest, int code, int count){
+
+}
 
 parsercore::~parsercore()
 {

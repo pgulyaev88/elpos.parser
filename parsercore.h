@@ -30,7 +30,8 @@ private slots:
     void getsettings();
     void startParser();
     void stopParser();
-
+    double insertIn(int idRest, int code, int count);
+    void dbcon();
 
 protected:
     void timerEvent(QTimerEvent *event);
@@ -41,6 +42,9 @@ private:
     int step;
     QString line;
     QStringList list;
+    int idRest;
+    int code;
+    int count;
 
 };
 
