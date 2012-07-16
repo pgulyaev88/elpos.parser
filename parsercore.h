@@ -30,7 +30,7 @@ private slots:
     void getsettings();
     void startParser();
     void stopParser();
-    double insertIn(int idRest, int code, int count);
+    void insertIn(int idRest, int code, int count);
     void dbcon();
 
 protected:

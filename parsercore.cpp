@@ -25,8 +25,6 @@ parsercore::parsercore(QWidget *parent) :
     connect(ui->stopButton,SIGNAL(clicked()),this,SLOT(stopParser()));
     timer->setInterval(800);
     timer->start();
-    int step = 0;
-//    parsefile();
     getsettings();
     dbcon();
 }
@@ -89,17 +87,20 @@ void parsercore::parsefile(){
             int pos = rx.indexIn(line);
             QStringList list;
             list = rx.capturedTexts();
-            QString cap1 = rx.cap(1);
-            int cap2 = rx.cap(2).toInt();
-            int cap3 = rx.cap(3).toInt();
-//            list
-//            qDebug() << line;
-//            qDebug() << list;
-            qDebug() << cap1;
-            qDebug() << cap2;
-            qDebug() << cap3;
+            if(!list.isEmpty()){
+                QString cap1 = rx.cap(1);
+                int cap2 = rx.cap(2).toInt();
+                int cap3 = rx.cap(3).toInt();
+    //            code = cap2;
+    //            count = cap3;
+    //            qDebug() << cap1;
+                qDebug() << cap2;
+                qDebug() << cap3;
+                insertIn(1,cap2,cap3);
+            }
+            qDebug() << "List is empty";
         }
-    //    clearenv();
+
 
 }
 
@@ -115,8 +116,25 @@ void parsercore::dbcon(){
     }
 }
 
-double parsercore::insertIn(int idRest, int code, int count){
+void parsercore::insertIn(int idRest, int code, int count){
 
+    int itemcode = code;
+    int itemcount = count;
+
+//    qDebug() << idRest;
+//    qDebug() << code;
+//    qDebug() << count;
+    QSqlDatabase::database();
+    QSqlQuery *insertdata = new QSqlQuery;
+    insertdata->prepare("INSERT INTO orders_details (id,restid,itemcode,itemcount,insertdate,deleted) "
+                        "VALUES(nextval('orders_details_id_seq'::regclass), "
+                        ":idRest, :itemcode, :itemcount, now(), false)");
+    insertdata->bindValue(":idRest",'1');
+    insertdata->bindValue(":itemcode",itemcode);
+    insertdata->bindValue(":itemcount",itemcount);
+    insertdata->exec();
+    if(insertdata->lastError().isValid())
+        qDebug() << insertdata->lastError();
 }
 
 parsercore::~parsercore()
