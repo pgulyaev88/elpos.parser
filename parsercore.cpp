@@ -75,33 +75,43 @@ void parsercore::parsefile(){
 //        getsettings();
 
 //        qDebug() << "Start Parsing";
-        QFile file("./com");
-        if(!file.open(QIODevice::ReadOnly))
+        QFile file("./_COM1.LOG");
+        if(!file.open(QIODevice::ReadWrite | QIODevice::Text))
             qDebug() << file.errorString();
 
         QTextStream in(&file);
+        in.setCodec("cp866");
         QString line = in.readLine();
-        QRegExp rx("(code):(\\d{4}):(\\d{3}|\\d{2}|\\d{1})");
+        QRegExp rx("(.*\\S+)\\s+(\\d+)");
+//        QRegExp order("(\\S+[Стол|Заказ])\\s+[№|#]\\s+(\\d+)");
+//        QRegExp timeorder("(.*\\S+[Время|доставки])\\s+(\\d+:\\d+)");
+
         while(!line.isNull()) {
             line = in.readLine();
             int pos = rx.indexIn(line);
             QStringList list;
             list = rx.capturedTexts();
             if(!list.isEmpty()){
+                pos++;
                 QString cap1 = rx.cap(1);
                 int cap2 = rx.cap(2).toInt();
-                int cap3 = rx.cap(3).toInt();
-    //            code = cap2;
-    //            count = cap3;
-    //            qDebug() << cap1;
+                qDebug() << cap1;
                 qDebug() << cap2;
-                qDebug() << cap3;
-                insertIn(1,cap2,cap3);
+                if(cap1!=NULL){
+                    qDebug() << cap1;
+                    qDebug() << cap2;
+//                    insertdb(1,cap1,cap2);
+                }
+                qDebug() << "Incorrect SQL-query";
+
             }
-            qDebug() << "List is empty";
+//            qDebug() << "List is empty";
+
         }
-
-
+        if(file.atEnd())
+            file.close();
+            timer->stop();
+            qDebug() << "Timer stop";
 }
 
 
@@ -114,6 +124,26 @@ void parsercore::dbcon(){
     if (!db.open()){
         qDebug() << QObject::trUtf8("Database error connect") << db.lastError().text();
     }
+}
+
+void parsercore::insertdb(int idRest, QString namefood, int count){
+
+    QString name = namefood;
+    int itemcount = count;
+
+    QSqlDatabase::database();
+    QSqlQuery *insertdata = new QSqlQuery;
+    insertdata->prepare("INSERT INTO orders_details2 (id,name,count) "
+                        "VALUES(nextval('orders_details2_id_seq'::regclass), "
+                        ":name, :itemcount)");
+    insertdata->bindValue(":idRest",'1');
+    insertdata->bindValue(":name",name);
+    insertdata->bindValue(":itemcount",itemcount);
+    insertdata->exec();
+    if(insertdata->lastError().isValid())
+        qDebug() << insertdata->lastError();
+        qDebug() << insertdata->executedQuery();
+
 }
 
 void parsercore::insertIn(int idRest, int code, int count){

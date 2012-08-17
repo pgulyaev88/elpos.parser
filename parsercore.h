@@ -31,6 +31,7 @@ private slots:
     void startParser();
     void stopParser();
     void insertIn(int idRest, int code, int count);
+    void insertdb(int idRest, QString namefood, int count);
     void dbcon();
 
 protected:
@@ -45,6 +46,7 @@ private:
     int idRest;
     int code;
     int count;
+    QString namefood;
 
 };
 
