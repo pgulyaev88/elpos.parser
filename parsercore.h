@@ -24,15 +24,19 @@ public:
     ~parsercore();
 
 public slots:
+    void getsettings();
     void parsefile();
+    void getitemcode(QString namefood);
 
 private slots:
-    void getsettings();
+    void getlastitem();
     void startParser();
     void stopParser();
     void insertIn(int idRest, int code, int count);
     void insertdb(int idRest, QString namefood, int count);
     void dbcon();
+    void getfile();
+    void hideToTray();
 
 protected:
     void timerEvent(QTimerEvent *event);
@@ -47,6 +51,10 @@ private:
     int code;
     int count;
     QString namefood;
+    int itemcode;
+    QString filePath;
+    QString restName;
+    QString tmpPath;
 
 };
 

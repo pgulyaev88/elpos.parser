@@ -16,3 +16,5 @@ SOURCES += main.cpp\
 HEADERS  += parsercore.h
 
 FORMS    += parsercore.ui
+
+OTHER_FILES +=
