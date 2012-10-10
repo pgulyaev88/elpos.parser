@@ -105,8 +105,8 @@ void parsercore::parsefile(){
         in.setCodec("cp866");
         QString line = in.readLine();
         QRegExp rx("(.*\\S+)\\s+(\\d+)");
-//        QRegExp rx("(.*\\S+[Стол|Заказ])\\s+[№|#]\\s+(\\d+)");
-//        QRegExp rx("(.*\\S+[Время|доставки])\\s+(\\d+:\\d+)");
+//        QRegExp rx("(.*\\S+[РЎС‚РѕР»|Р—Р°РєР°Р·])\\s+[в„–|#]\\s+(\\d+)");
+//        QRegExp rx("(.*\\S+[Р’СЂРµРјСЏ|РґРѕСЃС‚Р°РІРєРё])\\s+(\\d+:\\d+)");
 
         while(!line.isNull()) {
             line = in.readLine();
@@ -115,7 +115,7 @@ void parsercore::parsefile(){
             list = rx.capturedTexts();
             if(!list.isEmpty()){
                 QString cap1 = rx.cap(1);
-                int count = rx.cap(2).toInt();
+                count = rx.cap(2).toInt();
                 if(!cap1.isEmpty()){
                     itemcode = -1;
                     getitemcode(cap1);
@@ -123,10 +123,13 @@ void parsercore::parsefile(){
                         qDebug() << "Incorrect code";
                     } else {
                     insertIn(idRest,itemcode,count);
+                    list.clear();
+//                    line.clear();
                     }
                 }
-//                list.clear();
+
             }
+
         }
 
         if(file.atEnd()){
@@ -152,26 +155,26 @@ void parsercore::dbcon(){
     }
 }
 
-void parsercore::insertdb(int idRest, QString namefood, int count){
+//void parsercore::insertdb(int idRest, QString namefood, int count){
 
-    QString name = namefood;
-    int itemcount = count;
+//    QString name = namefood;
+//    int itemcount = count;
 
-    QSqlDatabase::database();
-    QSqlQuery *insertdata = new QSqlQuery;
-    insertdata->prepare("INSERT INTO orders_details2 (id,name,count) "
-                        "VALUES(nextval('orders_details2_id_seq'::regclass), "
-                        ":name, :itemcount)");
-    insertdata->bindValue(":idRest",'1');
-    insertdata->bindValue(":name",name);
-    insertdata->bindValue(":itemcount",itemcount);
-    insertdata->exec();
-    if(insertdata->lastError().isValid()){
-        qDebug() << insertdata->lastError();
-        qDebug() << insertdata->executedQuery();
-    }
-    insertdata->clear();
-}
+//    QSqlDatabase::database();
+//    QSqlQuery *insertdata = new QSqlQuery;
+//    insertdata->prepare("INSERT INTO orders_details2 (id,name,count) "
+//                        "VALUES(nextval('orders_details2_id_seq'::regclass), "
+//                        ":name, :itemcount)");
+//    insertdata->bindValue(":idRest",'1');
+//    insertdata->bindValue(":name",name);
+//    insertdata->bindValue(":itemcount",itemcount);
+//    insertdata->exec();
+//    if(insertdata->lastError().isValid()){
+//        qDebug() << insertdata->lastError();
+//        qDebug() << insertdata->executedQuery();
+//    }
+//    insertdata->clear();
+//}
 
 void parsercore::getitemcode(QString namefood){
     QString name = namefood;
@@ -191,7 +194,6 @@ void parsercore::getitemcode(QString namefood){
          itemcode = getcode->value(0).toInt();
     }
     qDebug() << "Code:" << itemcode;
-    getcode->clear();
 }
 
 void parsercore::insertIn(int idRest, int code, int count){
